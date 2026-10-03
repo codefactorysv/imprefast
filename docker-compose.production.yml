@@ -1,0 +1,24 @@
+services:
+  web:
+    networks:
+      - default
+      - traefik
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: cajita_traefik_net
+      traefik.http.routers.imprefast-http.entrypoints: web
+      traefik.http.routers.imprefast-http.rule: Host(`imprefast.codefactory.lat`)
+      traefik.http.routers.imprefast-http.middlewares: imprefast-https-redirect
+      traefik.http.routers.imprefast-http.service: imprefast
+      traefik.http.middlewares.imprefast-https-redirect.redirectscheme.scheme: https
+      traefik.http.middlewares.imprefast-https-redirect.redirectscheme.permanent: "true"
+      traefik.http.routers.imprefast-https.entrypoints: websecure
+      traefik.http.routers.imprefast-https.rule: Host(`imprefast.codefactory.lat`)
+      traefik.http.routers.imprefast-https.tls: "true"
+      traefik.http.routers.imprefast-https.service: imprefast
+      traefik.http.services.imprefast.loadbalancer.server.port: "80"
+
+networks:
+  traefik:
+    external: true
+    name: cajita_traefik_net

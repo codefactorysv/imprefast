@@ -1,0 +1,2 @@
+<?php
+namespace App\Services; class FakeRouteCalculator implements RouteCalculatorInterface { public function calculate(float $a,float $b,float $c,float $d): RouteResult { $earth=6371; $lat=deg2rad($c-$a); $lng=deg2rad($d-$b); $x=sin($lat/2)**2+cos(deg2rad($a))*cos(deg2rad($c))*sin($lng/2)**2; $km=2*$earth*asin(min(1,sqrt($x)))*1.25; return new RouteResult(round($km,2),(int)ceil($km*4),'fake'); } }

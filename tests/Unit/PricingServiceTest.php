@@ -1,0 +1,3 @@
+<?php
+namespace Tests\Unit; use App\Services\PricingService; use Illuminate\Foundation\Testing\RefreshDatabase; use Tests\TestCase;
+class PricingServiceTest extends TestCase { use RefreshDatabase; public function test_printing_subtotal():void{$this->assertSame(3.0,(new PricingService)->printing(10,3,.10));} public function test_delivery_examples():void{$p=new PricingService;$this->assertSame(1.5,$p->delivery(1)['total']);$this->assertSame(1.9,$p->delivery(3)['total']);$this->assertSame(2.5,$p->delivery(5)['total']);$this->assertSame(3.4,$p->delivery(8)['total']);$this->assertSame(4.0,$p->delivery(10)['total']);$this->assertSame(3.5,$p->delivery(5,false,true)['total']);$this->assertSame(5.0,$p->delivery(5,true,false)['total']);} }

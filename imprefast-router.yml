@@ -1,0 +1,22 @@
+http:
+  routers:
+    imprefast-http:
+      entryPoints: [web]
+      rule: Host(`imprefast.codefactory.lat`)
+      middlewares: [imprefast-https-redirect]
+      service: imprefast
+    imprefast-https:
+      entryPoints: [websecure]
+      rule: Host(`imprefast.codefactory.lat`)
+      service: imprefast
+      tls: {}
+  middlewares:
+    imprefast-https-redirect:
+      redirectScheme:
+        scheme: https
+        permanent: true
+  services:
+    imprefast:
+      loadBalancer:
+        servers:
+          - url: http://imprefast_julio-web-1:80

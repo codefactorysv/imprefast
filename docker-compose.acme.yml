@@ -1,0 +1,45 @@
+services:
+  challenge:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    volumes:
+      - challenge_data:/usr/share/nginx/html:ro
+    networks:
+      - traefik
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: cajita_traefik_net
+      traefik.http.routers.imprefast-acme.entrypoints: web
+      traefik.http.routers.imprefast-acme.rule: Host(`imprefast.codefactory.lat`) && PathPrefix(`/.well-known/acme-challenge/`)
+      traefik.http.routers.imprefast-acme.priority: "1000"
+      traefik.http.services.imprefast-acme.loadbalancer.server.port: "80"
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - challenge_data:/var/www/certbot
+      - letsencrypt_data:/etc/letsencrypt
+  renew:
+    image: certbot/certbot:latest
+    restart: unless-stopped
+    entrypoint: /bin/sh
+    command:
+      - -c
+      - "while :; do certbot renew --webroot --webroot-path /var/www/certbot --quiet --deploy-hook 'cp -L /etc/letsencrypt/live/imprefast.codefactory.lat/fullchain.pem /dynamic/imprefast.codefactory.lat.crt && cp -L /etc/letsencrypt/live/imprefast.codefactory.lat/privkey.pem /dynamic/imprefast.codefactory.lat.key'; sleep 43200; done"
+    volumes:
+      - challenge_data:/var/www/certbot
+      - letsencrypt_data:/etc/letsencrypt
+      - traefik_dynamic:/dynamic
+
+volumes:
+  challenge_data:
+    name: imprefast_julio_acme_challenge
+  letsencrypt_data:
+    name: imprefast_julio_letsencrypt
+  traefik_dynamic:
+    external: true
+    name: cajita_traefik_dynamic
+
+networks:
+  traefik:
+    external: true
+    name: cajita_traefik_net

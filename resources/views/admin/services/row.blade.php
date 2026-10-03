@@ -1,0 +1,9 @@
+<div class="option-row two" style="border-bottom:1px solid #ddd;padding-bottom:12px">
+@if($kind==='variants')
+<label>Nombre<input name="variants[{{ $i }}][name]" value="{{ $row['name']??'' }}"></label><label>Grupo<input name="variants[{{ $i }}][group_name]" value="{{ $row['group_name']??'Opción' }}"></label><label>Efecto<select name="variants[{{ $i }}][price_effect]"><option value="surcharge" @selected(($row['price_effect']??'')==='surcharge')>Agregar recargo</option><option value="replace" @selected(($row['price_effect']??'')==='replace')>Reemplazar precio</option></select></label><label>Precio<input type="number" step=".01" min="0" name="variants[{{ $i }}][price]" value="{{ $row['price']??0 }}"></label>
+@elseif($kind==='tiers')
+<label>Etiqueta<input name="tiers[{{ $i }}][label]" value="{{ $row['label']??'' }}"></label><label>Mínimo<input type="number" min="1" name="tiers[{{ $i }}][minimum_quantity]" value="{{ $row['minimum_quantity']??'' }}"></label><label>Máximo opcional<input type="number" min="1" name="tiers[{{ $i }}][maximum_quantity]" value="{{ $row['maximum_quantity']??'' }}"></label><label>Precio<input type="number" step=".01" min="0" name="tiers[{{ $i }}][price]" value="{{ $row['price']??'' }}"></label>
+@else
+<label>Nombre<input name="addons[{{ $i }}][name]" value="{{ $row['name']??'' }}"></label><label>Descripción<input name="addons[{{ $i }}][description]" value="{{ $row['description']??'' }}"></label><label>Tipo<select name="addons[{{ $i }}][price_type]"><option value="fixed">Fijo</option><option value="per_unit" @selected(($row['price_type']??'')==='per_unit')>Por unidad</option></select></label><label>Precio<input type="number" step=".01" min="0" name="addons[{{ $i }}][price]" value="{{ $row['price']??'' }}"></label>
+@endif
+<button type="button" onclick="removeRow(this)" style="background:#991b1b">Quitar</button></div>
